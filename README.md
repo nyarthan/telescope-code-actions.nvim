@@ -17,7 +17,11 @@ end)
 
 ## Configuration
 
-Nothing to configure yet...
+Load the extension with telescope
+
+```lua
+require('telescope').load_extensions('telescope-code-actions')
+```
 
 ## Usage
 
