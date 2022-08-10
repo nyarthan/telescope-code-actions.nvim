@@ -1,16 +1,18 @@
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 
-print("this extension is loaded")
+local U = require("telescope-code-actions.utils")
 
 local open_menu = function(opts)
 	opts = opts or {}
+
+	U.get_code_actions()
 
 	pickers
 		.new(opts, {
 			prompt_title = "Code Actions",
 			finder = finders.new_table({
-				results = { "hi", "second hi" },
+				results = U.get_code_actions(),
 			}),
 		})
 		:find()
