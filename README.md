@@ -20,7 +20,7 @@ end)
 Load the extension with telescope
 
 ```lua
-require('telescope').load_extensions('telescope-code-actions')
+require('telescope').load_extension('telescope-code-actions')
 ```
 
 ## Usage
