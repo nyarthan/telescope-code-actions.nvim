@@ -21,6 +21,6 @@ end
 return require("telescope").register_extension({
 	-- setup = function(ext_config, config) end,
 	exports = {
-		open = open_menu,
+		code_actions = open_menu,
 	},
 })

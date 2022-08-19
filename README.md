@@ -28,11 +28,11 @@ require('telescope').load_extension('telescope-code-actions')
 via command:
 
 ```vim
-:Telescope code_actions open
+:Telescope code_actions
 ```
 
 via lua api:
 
 ```lua
-require('telescope').extensions.code_actions.open()
+require('telescope').extensions.code_actions.code_actions()
 ```
