@@ -6,13 +6,13 @@ local U = require("telescope-code-actions.utils")
 local open_menu = function(opts)
 	opts = opts or {}
 
-	U.get_code_actions()
+	local actions = U.get_code_actions()
 
 	pickers
 		.new(opts, {
 			prompt_title = "Code Actions",
 			finder = finders.new_table({
-				results = U.get_code_actions(),
+				results = actions,
 			}),
 		})
 		:find()
