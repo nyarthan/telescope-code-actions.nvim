@@ -26,7 +26,7 @@ function CodeAction:apply()
 		vim.lsp.util.execute_command(self.server_action.command)
 	end
 	if self.server_action.edit then
-    ---@diagnostic disable-next-line: undefined-field
+		---@diagnostic disable-next-line: undefined-field
 		vim.lsp.util.apply_workspace_edit(self.server_action.edit, vim.opt.fileencoding:get())
 	end
 end
