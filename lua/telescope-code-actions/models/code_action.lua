@@ -21,4 +21,13 @@ function CodeAction:new(server_action, meta)
 	return instance
 end
 
+function CodeAction:apply()
+	if self.server_action.command then
+		vim.lsp.util.execute_command(self.server_action.command)
+	end
+	if self.server_action.edit then
+		vim.lsp.util.apply_workspace_edit(self.server_action.edit, "utf-8")
+	end
+end
+
 return CodeAction

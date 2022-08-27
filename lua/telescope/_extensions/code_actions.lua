@@ -1,5 +1,7 @@
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
 
 local U = require("telescope-code-actions.utils")
 
@@ -12,10 +14,23 @@ local open_menu = function(opts)
 		.new(opts, {
 			prompt_title = "Code Actions",
 			finder = finders.new_table({
-				results = vim.tbl_map(function(code_action)
-					return code_action.server_action.title
-				end, code_actions),
+				results = code_actions,
+				entry_maker = function(entry)
+					return {
+						value = entry,
+						display = entry.server_action.title,
+						ordinal = entry.server_action.title,
+					}
+				end,
 			}),
+			attach_mappings = function(prompt_bufnr, map)
+				actions.select_default:replace(function()
+					actions.close(prompt_bufnr)
+					local selection = action_state.get_selected_entry()
+					selection.value:apply()
+				end)
+				return true
+			end,
 		})
 		:find()
 end
