@@ -1,4 +1,4 @@
-# telescope-code-actions.nvim
+# telescope-code-actions.nvim (WIP!)
 
 ## Requirements
 
