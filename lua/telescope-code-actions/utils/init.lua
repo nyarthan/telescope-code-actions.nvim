@@ -6,12 +6,31 @@ https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/spe
 
 --]]
 
+local CodeAction = require("telescope-code-actions.models.code_action")
+
 local M = {}
+
+M.notify = function(msg, level, opts)
+	local message = "[telescope-code-actions]: " .. msg
+
+	---@diagnostic disable-next-line: redundant-parameter
+	vim.notify(message, level or vim.log.levels.INFO, opts)
+end
+
+M.resolve_code_action = function(client, code_action)
+	local res = client.request_sync("codeAction/resolve", code_action)
+	return res
+end
 
 M.get_code_actions = function()
 	local clients = vim.lsp.buf_get_clients()
 
-	local actions = {}
+	if not clients then
+		M.notify("No clients attached to this buffer!", vim.log.levels.ERROR)
+		return
+	end
+
+	local code_actions = {}
 
 	for _, client in pairs(clients) do
 		local params = vim.lsp.util.make_range_params()
@@ -32,16 +51,17 @@ M.get_code_actions = function()
 			return nil
 		end
 
-		local titles = vim.tbl_map(function(item)
-			return item.title
-		end, result)
-
-		for _, title in pairs(titles) do
-			table.insert(actions, title)
+		for _, server_action in pairs(result) do
+			table.insert(
+				code_actions,
+				CodeAction:new(server_action, {
+					client_id = client.id,
+				})
+			)
 		end
 	end
 
-	return actions
+	return code_actions
 end
 
 return M

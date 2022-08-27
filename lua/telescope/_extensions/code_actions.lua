@@ -6,13 +6,15 @@ local U = require("telescope-code-actions.utils")
 local open_menu = function(opts)
 	opts = opts or {}
 
-	local actions = U.get_code_actions()
+	local code_actions = U.get_code_actions()
 
 	pickers
 		.new(opts, {
 			prompt_title = "Code Actions",
 			finder = finders.new_table({
-				results = actions,
+				results = vim.tbl_map(function(code_action)
+					return code_action.server_action.title
+				end, code_actions),
 			}),
 		})
 		:find()
