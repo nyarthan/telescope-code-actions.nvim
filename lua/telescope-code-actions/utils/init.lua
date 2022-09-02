@@ -17,6 +17,10 @@ M.notify = function(msg, level, opts)
 	vim.notify(message, level or vim.log.levels.INFO, opts)
 end
 
+M.create_temp_file = function()
+	return vim.fn.tempname()
+end
+
 M.resolve_code_action = function(client, code_action)
 	local res = client.request_sync("codeAction/resolve", code_action)
 	return res
