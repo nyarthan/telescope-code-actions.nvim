@@ -47,6 +47,7 @@ M.get_code_actions = function()
 		end
 
 		if error then
+			M.notify(error, vim.log.levels.ERROR)
 			return nil
 		end
 
