@@ -51,11 +51,13 @@ M.get_code_actions = function()
 			return nil
 		end
 
+		local bufnr = vim.api.nvim_get_current_buf()
 		for _, server_action in pairs(result) do
 			table.insert(
 				code_actions,
 				CodeAction:new(server_action, {
 					client_id = client.id,
+					bufnr = bufnr,
 				})
 			)
 		end
