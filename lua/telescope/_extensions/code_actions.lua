@@ -10,31 +10,32 @@ local open_menu = function(opts)
 
 	local code_actions = U.get_code_actions()
 
-	if code_actions ~= nil then
-		pickers
-			.new(opts, {
-				prompt_title = "Code Actions",
-				finder = finders.new_table({
-					results = code_actions,
-					entry_maker = function(entry)
-						return {
-							value = entry,
-							display = entry.server_action.title,
-							ordinal = entry.server_action.title,
-						}
-					end,
-				}),
-				attach_mappings = function(prompt_bufnr, map)
-					actions.select_default:replace(function()
-						actions.close(prompt_bufnr)
-						local selection = action_state.get_selected_entry()
-						selection.value:apply()
-					end)
-					return true
-				end,
-			})
-			:find()
+	if code_actions == nil then
+		return
 	end
+	pickers
+		.new(opts, {
+			prompt_title = "Code Actions",
+			finder = finders.new_table({
+				results = code_actions,
+				entry_maker = function(entry)
+					return {
+						value = entry,
+						display = entry.server_action.title,
+						ordinal = entry.server_action.title,
+					}
+				end,
+			}),
+			attach_mappings = function(prompt_bufnr, map)
+				actions.select_default:replace(function()
+					actions.close(prompt_bufnr)
+					local selection = action_state.get_selected_entry()
+					selection.value:apply()
+				end)
+				return true
+			end,
+		})
+		:find()
 end
 
 return require("telescope").register_extension({
