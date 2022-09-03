@@ -10,6 +10,9 @@ local open_menu = function(opts)
 
 	local code_actions = U.get_code_actions()
 
+	if code_actions == nil then
+		return
+	end
 	pickers
 		.new(opts, {
 			prompt_title = "Code Actions",

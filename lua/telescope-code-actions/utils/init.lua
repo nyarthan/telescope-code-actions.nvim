@@ -42,13 +42,16 @@ M.get_code_actions = function()
 		local result = response.result
 		local error = response.err
 
+		if error ~= nil and error.code == -32601 then
+			M.notify("Current LSP server has no code actions method", vim.log.levels.ERROR)
+		end
+
 		if error then
-			vim.notify(error)
 			return nil
 		end
 
 		if result == nil then
-			return nil
+			return {}
 		end
 
 		local bufnr = vim.api.nvim_get_current_buf()
