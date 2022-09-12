@@ -2,6 +2,7 @@ local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
+local conf = require("telescope.config").values
 local icons = require("telescope-code-actions.icons")
 
 local U = require("telescope-code-actions.utils")
@@ -30,6 +31,7 @@ local open_menu = function(opts)
 						ordinal = entry.server_action.title,
 					}
 				end,
+				sorter = conf.generic_sorter(opts),
 			}),
 			attach_mappings = function(prompt_bufnr, map)
 				actions.select_default:replace(function()
