@@ -22,13 +22,13 @@ local open_menu = function(opts)
 		local displayer = entry_display.create({
 			separator = " ",
 			items = {
-				{ width = 1 },
+				{ width = 2 },
 				{ width = #entry.server_action.title },
 			},
 		})
 
 		return displayer({
-			{ icons.kind[entry.server_action.kind] },
+			{ icons.kind[entry.server_action.kind] or "" },
 			{ entry.server_action.title },
 		})
 	end
