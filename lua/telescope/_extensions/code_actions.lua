@@ -2,6 +2,8 @@ local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
+local make_entry = require("telescope.make_entry")
+local entry_display = require("telescope.pickers.entry_display")
 local conf = require("telescope.config").values
 local icons = require("telescope-code-actions.icons")
 
@@ -15,21 +17,32 @@ local open_menu = function(opts)
 	if code_actions == nil then
 		return
 	end
+
+	local make_display = function(entry)
+		local displayer = entry_display.create({
+			separator = " ",
+			items = {
+				{ width = 1 },
+				{ width = #entry.server_action.title },
+			},
+		})
+
+		return displayer({
+			{ icons.kind[entry.server_action.kind] },
+			{ entry.server_action.title },
+		})
+	end
+
 	pickers
 		.new(opts, {
 			prompt_title = "Code Actions",
 			finder = finders.new_table({
 				results = code_actions,
 				entry_maker = function(entry)
-					local icon = icons.kind[entry.server_action.kind]
-
-					local display = icon .. " " .. entry.server_action.title
-
-					return {
-						value = entry,
-						display = display,
-						ordinal = entry.server_action.title,
-					}
+					entry.value = entry
+					entry.ordinal = entry.server_action.title
+					entry.display = make_display
+					return make_entry.set_default_entry_mt(entry, opts)
 				end,
 				sorter = conf.generic_sorter(opts),
 			}),
