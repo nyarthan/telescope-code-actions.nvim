@@ -22,7 +22,7 @@ M.resolve_code_action = function(client, code_action)
 	return res
 end
 
-M.get_code_actions = function()
+M.get_code_actions = function(bufnr)
 	local clients = vim.lsp.buf_get_clients()
 
 	if not clients then
@@ -32,15 +32,16 @@ M.get_code_actions = function()
 
 	local code_actions = {}
 
-	for _, client in pairs(clients) do
-		local params = vim.lsp.util.make_range_params()
-		params.context = {
-			diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
-		}
-		local response = client.request_sync("textDocument/codeAction", params)
+	local method = "textDocument/codeAction"
+	local params = vim.lsp.util.make_range_params()
+	params.context = {
+		diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
+	}
 
-		local result = response.result
-		local error = response.err
+	local server_actions = vim.lsp.buf_request_sync(bufnr, method, params)
+	for client_id, item in pairs(server_actions) do
+		local result = item.result
+		local error = item.error
 
 		if error ~= nil and error.code == -32601 then
 			M.notify("Current LSP server has no code actions method", vim.log.levels.ERROR)
@@ -54,15 +55,8 @@ M.get_code_actions = function()
 			return {}
 		end
 
-		local bufnr = vim.api.nvim_get_current_buf()
-		for _, server_action in pairs(result) do
-			table.insert(
-				code_actions,
-				CodeAction:new(server_action, {
-					client_id = client.id,
-					bufnr = bufnr,
-				})
-			)
+		for _, action in pairs(result) do
+			table.insert(code_actions, CodeAction:new(action, { client_id = client_id, bufnr = bufnr }))
 		end
 	end
 

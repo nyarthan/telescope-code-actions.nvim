@@ -8,7 +8,7 @@ local U = require("telescope-code-actions.utils")
 local open_menu = function(opts)
 	opts = opts or {}
 
-	local code_actions = U.get_code_actions()
+	local code_actions = U.get_code_actions(0)
 
 	if code_actions == nil then
 		return
